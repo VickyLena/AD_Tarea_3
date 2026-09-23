@@ -29,5 +29,14 @@
         <h1>Gestión de Imágenes</h1>
         <p>Bienvenido/a, <%=usuario%></p>
         <h2>Menú</h2>
+        <ul>
+            <li>
+                <a href="registrarImagen.jsp">Registrar nueva imagen</a>
+            </li>
+
+            <li>
+                <a href="buscarImagen.jsp">Buscar imágenes</a>
+            </li>
+        </ul>
     </body>
 </html>
