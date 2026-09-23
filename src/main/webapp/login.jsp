@@ -15,7 +15,7 @@
         <h1>Gestión de Imagenes</h1>
         <%out.println("<h2>Inicio de Sesión</h2>"); %>
         
-        <from action ="login" method ="POST">
+        <form action ="login" method ="POST">
             <label> Usuario: </label>
             <input type="text" name="usuario" required>
             
@@ -25,10 +25,6 @@
             <br><br>
             <input type="submit" value="Iniciar sesión">
             
-        </from>
-        
-        
-        
-        
+        </form>
     </body>
 </html>
