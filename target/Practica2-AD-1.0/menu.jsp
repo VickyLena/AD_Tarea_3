@@ -8,6 +8,7 @@
 <%@page import="jakarta.servlet.http.HttpSession"%>
 
 
+<%-- Segmento de manejo de sesion --%>
 <%
     HttpSession sesion = request.getSession(false);
 
@@ -23,8 +24,13 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Menu</title>
     </head>
+    <header>
+        <div>
+            <a href="logout" style="color: red; font-weight: bold;">Cerrar Sesión</a>
+        </div>
+    </header>
     <body>
         <h1>Gestión de Imágenes</h1>
         <p>Bienvenido/a, <%=usuario%></p>

@@ -31,7 +31,7 @@ public class login extends HttpServlet {
         boolean esValido = ConexionBDD.validarUsuario(usuario, password);
 
         if (esValido) {
-            // Usuario correcto
+            // Todo correcto
             HttpSession session = request.getSession();
             session.setAttribute("usuario", usuario);
             response.sendRedirect("menu.jsp");

@@ -42,4 +42,30 @@ public class ConexionBDD {
             return false;
         }
     }
+    
+    // Método para suba de Imagenes
+    public static boolean registrarImagen(String titulo, String descripcion, String keywords,
+            String autor, String fechaCreacion, String fechaAlta, String nombreFichero) {
+
+        String sql = "INSERT INTO imagen (TITULO, DESCRIPCION, PALABRAS_CLAVE, AUTOR, FECHA_CREACION, FECHA_ALTA, FICHERO) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, titulo);
+            statement.setString(2, descripcion);
+            statement.setString(3, keywords);
+            statement.setString(4, autor);
+            statement.setString(5, fechaCreacion);
+            statement.setString(6, fechaAlta);
+            statement.setString(7, nombreFichero);
+
+            int filasInsertadas = statement.executeUpdate();
+            return filasInsertadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
