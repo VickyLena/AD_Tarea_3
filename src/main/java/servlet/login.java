@@ -20,8 +20,6 @@ import jakarta.servlet.http.HttpSession;
 @WebServlet("/login")
 public class login extends HttpServlet {
 
-
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
