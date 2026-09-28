@@ -9,6 +9,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  *
@@ -19,12 +21,12 @@ public class ConexionBDD {
 
     private static final String URL = "jdbc:derby://localhost:1527/pr2;user=pr2;password=pr2";
 
-    // Método conexión gral
+    // Metodo conexión gral
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(URL);
     }
 
-    // Método login
+    // Metodo login
     public static boolean validarUsuario(String usuario, String password) {
         String sql = "SELECT * FROM usuarios WHERE id_usuario = ? AND password = ?";
 
@@ -43,7 +45,7 @@ public class ConexionBDD {
         }
     }
     
-    // Método para suba de Imagenes
+    // Metodo para suba de Imagenes
     public static boolean registrarImagen(String titulo, String descripcion, String keywords,
             String autor, String fechaCreacion, String fechaAlta, String nombreFichero) {
 
@@ -67,5 +69,76 @@ public class ConexionBDD {
             e.printStackTrace();
             return false;
         }
+    }
+    
+    // Metodo de busqueda de imàgenes + objeto Imagen
+    public static class Imagen {
+        private int id;
+        private String titulo;
+        private String descripcion;
+        private String keywords;
+        private String autor;
+        private String fechaCreacion;
+        private String fechaAlta;
+        private String fichero;
+
+        public Imagen(int id, String titulo, String descripcion, String keywords, String autor, String fechaCreacion, String fechaAlta, String fichero) {
+            this.id = id;
+            this.titulo = titulo;
+            this.descripcion = descripcion;
+            this.keywords = keywords;
+            this.autor = autor;
+            this.fechaCreacion = fechaCreacion;
+            this.fechaAlta = fechaAlta;
+            this.fichero = fichero;
+        }
+        
+     public int getId() { return id; }
+        public String getTitulo() { return titulo; }
+        public String getDescripcion() { return descripcion; }
+        public String getKeywords() { return keywords; }
+        public String getAutor() { return autor; }
+        public String getFechaCreacion() { return fechaCreacion; }
+        public String getFechaAlta() { return fechaAlta; }
+        public String getFichero() { return fichero; }
+    }
+    
+    public static List<Imagen> buscarImagenes(String titulo, String autor, String keywords) {
+        List<Imagen> lista = new ArrayList<>();
+        
+        // x si el param viene vacío
+        titulo = (titulo == null) ? "" : titulo.trim();
+        autor = (autor == null) ? "" : autor.trim();
+        keywords = (keywords == null) ? "" : keywords.trim();
+        
+        String sql = "SELECT * FROM imagen WHERE LOWER(TITULO) LIKE LOWER(?) "
+                   + "AND LOWER(AUTOR) LIKE LOWER(?) "
+                   + "AND LOWER(PALABRAS_CLAVE) LIKE LOWER(?)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, "%" + titulo + "%"); // % se usa para que no importe lo que esta antes o despues
+            statement.setString(2, "%" + autor + "%");
+            statement.setString(3, "%" + keywords + "%");
+
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    lista.add(new Imagen(
+                        rs.getInt("ID"),
+                        rs.getString("TITULO"),
+                        rs.getString("DESCRIPCION"),
+                        rs.getString("PALABRAS_CLAVE"),
+                        rs.getString("AUTOR"),
+                        rs.getString("FECHA_CREACION"),
+                        rs.getString("FECHA_ALTA"),
+                        rs.getString("FICHERO")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return lista;
     }
 }

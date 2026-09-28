@@ -28,7 +28,7 @@
     </head>
     <header>
         <div>
-            <a href="logout" style="color: red; font-weight: bold;">Cerrar Sesión</a>
+            <a href="logout" style="font-weight: bold;">Cerrar Sesión</a>
         </div>
     </header>
     <body>

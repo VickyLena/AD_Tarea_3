@@ -25,6 +25,11 @@
         <title>Registrar Imagen</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
+     <header>
+        <div>
+            <a href="logout" style="font-weight: bold;">Cerrar Sesión</a>
+        </div>
+    </header>
     <body>
         <form method="POST" action="registrarImagen" enctype="multipart/form-data" >
             <div>
