@@ -144,4 +144,47 @@ public class ConexionBDD {
         }
         return lista;
     }
+    
+    // Metodo obtener imagenes por ID para eliminar y modificar.
+    public static Imagen getById(int id) {
+        String sql = "SELECT * FROM imagen WHERE ID = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return new Imagen(
+                        rs.getInt("ID"),
+                        rs.getString("TITULO"),
+                        rs.getString("DESCRIPCION"),
+                        rs.getString("PALABRAS_CLAVE"),
+                        rs.getString("AUTOR"),
+                        rs.getString("FECHA_CREACION"),
+                        rs.getString("FECHA_ALTA"),
+                        rs.getString("FICHERO")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+    
+    // Metodo eliminar
+    public static boolean eliminar(int id){
+        String sql = "DELETE FROM imagen WHERE ID = ?";
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            int filasBorradas = statement.executeUpdate();
+            return filasBorradas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

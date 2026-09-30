@@ -25,7 +25,7 @@
         <title>Registrar Imagen</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
-     <header>
+    <header>
         <div>
             <a href="logout" style="font-weight: bold;">Cerrar Sesión</a>
         </div>
