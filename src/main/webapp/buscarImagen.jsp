@@ -37,15 +37,6 @@
     </header>
     <body>
         <h2>Buscar Imagenes</h2>           
-        <ul>
-            <li>
-                <a href="eliminarImagen.jsp">Eliminar Imagen</a>
-            </li>
-
-            <li>
-                <a href="modificarImagen.jsp">Modificar Imagen</a>
-            </li>
-        </ul>
         <form action="buscarImagen" method="GET">
             <p>
                 <label for="titulo">Título:</label><br>
@@ -58,6 +49,10 @@
             <p>
                 <label for="keywords">Palabras clave:</label><br>
                 <input type="text" id="keywords" name="keywords">
+            </p>
+            <p>
+                <label for="fechaCreacion">Fecha creación:</label><br>
+                <input type="date" id="fecha" name="fecha">
             </p>
             <p>
                 <input type="submit" value="Buscar">

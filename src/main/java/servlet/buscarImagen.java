@@ -46,6 +46,8 @@ public class buscarImagen extends HttpServlet {
         String titulo = request.getParameter("titulo");
         String autor = request.getParameter("autor");
         String keywords = request.getParameter("keywords");
+        String date = request.getParameter("fechaCreacion");
+
         
         List<Imagen> resultados = ConexionBDD.buscarImagenes(titulo, autor, keywords);
 
