@@ -103,17 +103,19 @@ public class ConexionBDD {
         public String getFichero() { return fichero; }
     }
     
-    public static List<Imagen> buscarImagenes(String titulo, String autor, String keywords) {
+    public static List<Imagen> buscarImagenes(String titulo, String autor, String keywords, String fechaCreacion) {
         List<Imagen> lista = new ArrayList<>();
         
         // x si el param viene vacío
         titulo = (titulo == null) ? "" : titulo.trim();
         autor = (autor == null) ? "" : autor.trim();
         keywords = (keywords == null) ? "" : keywords.trim();
+        fechaCreacion = (fechaCreacion == null) ? "" : fechaCreacion.trim();
         
         String sql = "SELECT * FROM imagen WHERE LOWER(TITULO) LIKE LOWER(?) "
                    + "AND LOWER(AUTOR) LIKE LOWER(?) "
-                   + "AND LOWER(PALABRAS_CLAVE) LIKE LOWER(?)";
+                   + "AND LOWER(PALABRAS_CLAVE) LIKE LOWER(?)"
+                   + "AND FECHA_CREACION LIKE ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -121,6 +123,7 @@ public class ConexionBDD {
             statement.setString(1, "%" + titulo + "%"); // % se usa para que no importe lo que esta antes o despues
             statement.setString(2, "%" + autor + "%");
             statement.setString(3, "%" + keywords + "%");
+            statement.setString(4, "%" + fechaCreacion + "%");
 
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {

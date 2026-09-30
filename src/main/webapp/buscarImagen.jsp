@@ -52,7 +52,7 @@
             </p>
             <p>
                 <label for="fechaCreacion">Fecha creación:</label><br>
-                <input type="date" id="fecha" name="fecha">
+                <input type="date" id="fechaCreacion" name="fechaCreacion">
             </p>
             <p>
                 <input type="submit" value="Buscar">
