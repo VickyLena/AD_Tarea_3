@@ -23,10 +23,9 @@
 <html lang="en">
     <head>
         <title>Registrar Imagen</title>
-        <link rel="stylesheet" type="text/css" href="css/styles.css">
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
-    <header>
+     <header>
         <div>
             <a href="logout" style="font-weight: bold;">Cerrar Sesión</a>
         </div>
