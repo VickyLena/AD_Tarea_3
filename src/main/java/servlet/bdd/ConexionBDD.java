@@ -145,13 +145,15 @@ public class ConexionBDD {
         return lista;
     }
     
-    // Metodo obtener imagenes por ID para eliminar y modificar.
-    public static Imagen getById(int id) {
+        // Obtener una imagen por su ID (para modificar/eliminar)
+    public static Imagen obtenerImagenPorId(int id) {
         String sql = "SELECT * FROM imagen WHERE ID = ?";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, id);
+
             try (ResultSet rs = statement.executeQuery()) {
                 if (rs.next()) {
                     return new Imagen(
@@ -171,16 +173,27 @@ public class ConexionBDD {
         }
         return null;
     }
-    
-    // Metodo eliminar
-    public static boolean eliminar(int id){
-        String sql = "DELETE FROM imagen WHERE ID = ?";
+
+    // Modificar una imagen existente (solo si el autor coincide)
+    public static boolean modificarImagen(int id, String titulo, String descripcion, String keywords,
+            String fechaCreacion, String fichero, String autor) {
+
+        String sql = "UPDATE imagen SET TITULO = ?, DESCRIPCION = ?, PALABRAS_CLAVE = ?, "
+                   + "FECHA_CREACION = ?, FICHERO = ? WHERE ID = ? AND AUTOR = ?";
+
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
 
-            statement.setInt(1, id);
-            int filasBorradas = statement.executeUpdate();
-            return filasBorradas > 0;
+            statement.setString(1, titulo);
+            statement.setString(2, descripcion);
+            statement.setString(3, keywords);
+            statement.setString(4, fechaCreacion);
+            statement.setString(5, fichero);
+            statement.setInt(6, id);
+            statement.setString(7, autor);
+
+            int filasActualizadas = statement.executeUpdate();
+            return filasActualizadas > 0;
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -4,6 +4,11 @@
     Author     : alumne
 --%>
 
+<%
+    HttpSession sesion = request.getSession(false);
+    boolean logueado = (sesion != null && sesion.getAttribute("usuario") != null);
+%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -14,5 +19,12 @@
     <body>
         <h1>Ha habido un Error</h1>
         <h2>Lo sentimos!</h2>
+        <% if (logueado){ %>
+            <a href="menu.jsp">Volver al Menú</a>
+        
+        <%} else {%> 
+        <a href="login.jsp"> Volver a Inicio de Sesión </a>
+        
+        <%}%>
     </body>
 </html>
