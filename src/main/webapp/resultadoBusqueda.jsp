@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<a href="eliminarImagen.jsp"></a>
 <%@page import="java.util.List"%>
 <%@page import="servlet.bdd.ConexionBDD.Imagen"%>
 <%-- Segmento de manejo de sesion --%>

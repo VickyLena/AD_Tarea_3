@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.RequestDispatcher;
 
 /**
  *
@@ -78,12 +79,9 @@ public class eliminarImagen extends HttpServlet {
         boolean deleteOK = ConexionBDD.eliminar(id);
 
         if (deleteOK) {
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("<html><body>");
-            response.getWriter().println("<h3>Imagen eliminada correctamente.</h3>");
-            response.getWriter().println("<a href='buscarImagen.jsp'>Volver a la búsqueda</a> | ");
-            response.getWriter().println("<a href='menu.jsp'>Volver al menú</a>");
-            response.getWriter().println("</body></html>");
+            // Redirigir al JSP de éxito (Sin HTML en el servlet)
+            RequestDispatcher dispatcher = request.getRequestDispatcher("eliminarOk.jsp");
+            dispatcher.forward(request, response);
         } else {
             response.sendRedirect("error.jsp");
         }
