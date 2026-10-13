@@ -112,7 +112,7 @@ public class ConexionBDD {
         keywords = (keywords == null) ? "" : keywords.trim();
         fechaCreacion = (fechaCreacion == null) ? "" : fechaCreacion.trim();
         
-        String sql = "SELECT * FROM image WHERE LOWER(TIRLE) LIKE LOWER(?) "
+        String sql = "SELECT * FROM image WHERE LOWER(TITLE) LIKE LOWER(?) "
                    + "AND LOWER(CREATOR) LIKE LOWER(?) "
                    + "AND LOWER(KEYWORDS) LIKE LOWER(?)"
                    + "AND CAPTURE_DATE LIKE ?";
@@ -147,7 +147,7 @@ public class ConexionBDD {
     
         // Obtener una imagen por su ID (para modificar/eliminar)
     public static Imagen obtenerImagenPorId(int id) {
-        String sql = "SELECT * FROM imagen WHERE ID = ?";
+        String sql = "SELECT * FROM image WHERE ID = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -178,7 +178,7 @@ public class ConexionBDD {
     public static boolean modificarImagen(int id, String titulo, String descripcion, String keywords,
             String fechaCreacion, String fichero, String autor) {
 
-        String sql = "UPDATE imagen SET TITLE = ?, DESCRIPTION = ?, KEYWORDS = ?, "
+        String sql = "UPDATE image SET TITLE = ?, DESCRIPTION = ?, KEYWORDS = ?, "
                    + "CAPTURE_DATE = ?, FILENAME = ? WHERE ID = ? AND CREATOR = ?";
 
         try (Connection connection = getConnection();
@@ -204,7 +204,7 @@ public class ConexionBDD {
     
     // Eliminar una imagen (solo si el autor coincide)
     public static boolean eliminarImagen(int id, String autor) {
-        String sql = "DELETE FROM imagen WHERE ID = ? AND CREATOR = ?";
+        String sql = "DELETE FROM image WHERE ID = ? AND CREATOR = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
