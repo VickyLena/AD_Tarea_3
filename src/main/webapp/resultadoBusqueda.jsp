@@ -58,7 +58,7 @@
 
                 <% for (Imagen img : resultados) { %>
                     <tr>
-                        <td><img src="imagenes/<%= img.getFichero() %>" width="100"/></td>
+                        <td><img src="uploads/<%= img.getFichero() %>" width="100"/></td>
                         <td><%= img.getTitulo() %></td>
                         <td><%= img.getDescripcion() %></td>
                         <td><%= img.getKeywords() %></td>

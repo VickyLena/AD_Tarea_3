@@ -9,7 +9,7 @@ package servlet.util;
  * @author alumne
  */
 public class Rutas {
-    public static final String DIRECTORIO_IMAGENES = "/var/webapps/Upload";
+    public static final String DIRECTORIO_IMAGENES = "/home/alumne/uploads";
 
     private Rutas() { }
 }

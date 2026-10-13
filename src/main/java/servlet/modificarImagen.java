@@ -31,7 +31,7 @@ public class modificarImagen extends HttpServlet {
     private final static Logger LOGGER =
             Logger.getLogger(modificarImagen.class.getCanonicalName());
 
-    private static final String UPLOAD_DIR = "imagenes";
+    private static final String UPLOAD_DIR = "/home/alumne/uploads";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -75,9 +75,7 @@ public class modificarImagen extends HttpServlet {
             final String fileName = getFileName(filePart);
 
             if (fileName != null && !fileName.trim().isEmpty()) {
-                String applicationPath = request.getServletContext().getRealPath("");
-                String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR;
-                File uploadDir = new File(uploadFilePath);
+                File uploadDir = new File(UPLOAD_DIR);
                 if (!uploadDir.exists()) {
                     uploadDir.mkdirs();
                 }
