@@ -34,8 +34,6 @@ public class registrarImagen extends HttpServlet {
     private final static Logger LOGGER =
             Logger.getLogger(registrarImagen.class.getCanonicalName());
 
-    private static final String UPLOAD_DIR = "imagenes";
-
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -67,10 +65,10 @@ public class registrarImagen extends HttpServlet {
             return;
         }
 
-        // directorio de destino porque no hay parametro "destination" como en el tutorial
-        String applicationPath = request.getServletContext().getRealPath("");
-        String uploadFilePath = applicationPath + File.separator + UPLOAD_DIR;
+        // directorio de destino como configuramis en glassfish-web.xml
+        String uploadFilePath = "/var/webapp/uploads";
         File uploadDir = new File(uploadFilePath);
+
         if (!uploadDir.exists()) {
             uploadDir.mkdirs();
         }

@@ -54,7 +54,10 @@ public class eliminarImagen extends HttpServlet {
 
         if (deleteOK) {
             // Solo si la BDD ha ido bien, eliminar el fichero del directorio externo
-            File fileToDelete = new File(Rutas.DIRECTORIO_IMAGENES, img.getFichero());
+            String uploadFilePath = "/var/webapp/uploads";
+            String filePath = uploadFilePath + File.separator + img.getFichero();
+            File fileToDelete = new File(filePath);
+
             if (fileToDelete.exists()) {
                 fileToDelete.delete();
             }

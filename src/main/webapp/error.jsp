@@ -26,5 +26,16 @@
         <a href="login.jsp"> Volver a Inicio de Sesión </a>
         
         <%}%>
+        
+        <p>
+        <% 
+            String errorMsg = (String) request.getAttribute("errorMessage");
+            if (errorMsg != null) {
+                out.print(errorMsg);
+            } else {
+                out.print("Ha ocurrido un error inesperado en la aplicación.");
+            }
+        %>
+    </p>
     </body>
 </html>
