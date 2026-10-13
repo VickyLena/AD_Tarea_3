@@ -66,7 +66,7 @@ public class registrarImagen extends HttpServlet {
         }
 
         // directorio de destino como configuramis en glassfish-web.xml
-        String uploadFilePath = "/var/webapp/uploads";
+        String uploadFilePath = "/home/alumne/uploads";
         File uploadDir = new File(uploadFilePath);
 
         if (!uploadDir.exists()) {

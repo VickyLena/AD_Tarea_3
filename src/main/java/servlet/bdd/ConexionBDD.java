@@ -49,7 +49,7 @@ public class ConexionBDD {
     public static boolean registrarImagen(String titulo, String descripcion, String keywords,
             String autor, String fechaCreacion, String fechaAlta, String nombreFichero) {
 
-        String sql = "INSERT INTO imagen (TITULO, DESCRIPCION, PALABRAS_CLAVE, AUTOR, FECHA_CREACION, FECHA_ALTA, FICHERO) "
+        String sql = "INSERT INTO image (TITLE, DESCRIPCION, KEYWORDS, CREATOR, CAPTURE_DATE, STORAGE_DATE, FILENAME) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -112,10 +112,10 @@ public class ConexionBDD {
         keywords = (keywords == null) ? "" : keywords.trim();
         fechaCreacion = (fechaCreacion == null) ? "" : fechaCreacion.trim();
         
-        String sql = "SELECT * FROM imagen WHERE LOWER(TITULO) LIKE LOWER(?) "
-                   + "AND LOWER(AUTOR) LIKE LOWER(?) "
-                   + "AND LOWER(PALABRAS_CLAVE) LIKE LOWER(?)"
-                   + "AND FECHA_CREACION LIKE ?";
+        String sql = "SELECT * FROM image WHERE LOWER(TIRLE) LIKE LOWER(?) "
+                   + "AND LOWER(CREATOR) LIKE LOWER(?) "
+                   + "AND LOWER(KEYWORDS) LIKE LOWER(?)"
+                   + "AND CAPTURE_DATE LIKE ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -129,13 +129,13 @@ public class ConexionBDD {
                 while (rs.next()) {
                     lista.add(new Imagen(
                         rs.getInt("ID"),
-                        rs.getString("TITULO"),
-                        rs.getString("DESCRIPCION"),
-                        rs.getString("PALABRAS_CLAVE"),
-                        rs.getString("AUTOR"),
-                        rs.getString("FECHA_CREACION"),
-                        rs.getString("FECHA_ALTA"),
-                        rs.getString("FICHERO")
+                        rs.getString("TITLE"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getString("KEYWORDS"),
+                        rs.getString("CREATOR"),
+                        rs.getString("CAPTURE_DATE"),
+                        rs.getString("STORAGE_DATE"),
+                        rs.getString("FILENAME")
                     ));
                 }
             }
@@ -158,13 +158,13 @@ public class ConexionBDD {
                 if (rs.next()) {
                     return new Imagen(
                         rs.getInt("ID"),
-                        rs.getString("TITULO"),
-                        rs.getString("DESCRIPCION"),
-                        rs.getString("PALABRAS_CLAVE"),
-                        rs.getString("AUTOR"),
-                        rs.getString("FECHA_CREACION"),
-                        rs.getString("FECHA_ALTA"),
-                        rs.getString("FICHERO")
+                        rs.getString("TITLE"),
+                        rs.getString("DESCRIPTION"),
+                        rs.getString("KEYWORDS"),
+                        rs.getString("CREATOR"),
+                        rs.getString("CAPTURE_DATE"),
+                        rs.getString("STORAGE_DATE"),
+                        rs.getString("FILENAME")
                     );
                 }
             }
@@ -178,8 +178,8 @@ public class ConexionBDD {
     public static boolean modificarImagen(int id, String titulo, String descripcion, String keywords,
             String fechaCreacion, String fichero, String autor) {
 
-        String sql = "UPDATE imagen SET TITULO = ?, DESCRIPCION = ?, PALABRAS_CLAVE = ?, "
-                   + "FECHA_CREACION = ?, FICHERO = ? WHERE ID = ? AND AUTOR = ?";
+        String sql = "UPDATE imagen SET TITLE = ?, DESCRIPTION = ?, KEYWORDS = ?, "
+                   + "CAPTURE_DATE = ?, FILENAME = ? WHERE ID = ? AND CREATOR = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -204,7 +204,7 @@ public class ConexionBDD {
     
     // Eliminar una imagen (solo si el autor coincide)
     public static boolean eliminarImagen(int id, String autor) {
-        String sql = "DELETE FROM imagen WHERE ID = ? AND AUTOR = ?";
+        String sql = "DELETE FROM imagen WHERE ID = ? AND CREATOR = ?";
 
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
