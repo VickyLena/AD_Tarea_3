@@ -9,6 +9,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <a href="login.jsp"></a>
         <link rel="stylesheet" type="text/css" href="css/styles.css">
         <title>Login - Gestión de imágenes</title>
     </head>
@@ -25,7 +26,7 @@
             <input type="password" name="password" required>
             <br><br>
             <input type="submit" value="Iniciar sesión">
-            
+            <p>¿No tienes cuenta? <a href="registro.jsp">Regístrate</a></p>
         </form>
     </body>
 </html>

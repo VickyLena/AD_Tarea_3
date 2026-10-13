@@ -219,4 +219,41 @@ public class ConexionBDD {
             return false;
         }
     }
+    
+        // Comprobar si un usuario ya existe (sin distinguir mayúsculas)
+    public static boolean existeUsuario(String usuario) {
+        String sql = "SELECT 1 FROM usuarios WHERE LOWER(id_usuario) = LOWER(?)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, usuario);
+
+            try (ResultSet rs = statement.executeQuery()) {
+                return rs.next();
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return true; // ante la duda, no dejamos registrar
+        }
+    }
+
+    // Registrar un usuario nuevo
+    public static boolean registrarUsuario(String usuario, String password) {
+        String sql = "INSERT INTO usuarios (id_usuario, password) VALUES (?, ?)";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, usuario);
+            statement.setString(2, password);
+
+            return statement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
