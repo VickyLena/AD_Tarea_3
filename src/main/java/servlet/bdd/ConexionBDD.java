@@ -49,7 +49,7 @@ public class ConexionBDD {
     public static boolean registrarImagen(String titulo, String descripcion, String keywords,
             String autor, String fechaCreacion, String fechaAlta, String nombreFichero) {
 
-        String sql = "INSERT INTO image (TITLE, DESCRIPCION, KEYWORDS, CREATOR, CAPTURE_DATE, STORAGE_DATE, FILENAME) "
+        String sql = "INSERT INTO image (TITLE, DESCRIPTION, KEYWORDS, CREATOR, CAPTURE_DATE, STORAGE_DATE, FILENAME) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = getConnection(); PreparedStatement statement = connection.prepareStatement(sql)) {
