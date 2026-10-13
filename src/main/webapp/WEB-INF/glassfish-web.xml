@@ -22,4 +22,12 @@
       <description>Keep a copy of the generated servlet class' java code.</description>
     </property>
   </jsp-config>
+  <!--
+Source - https://stackoverflow.com/a/8889096
+Posted by BalusC, modified by community. See post 'Timeline' for change history
+Retrieved 2026-10-07, License - CC BY-SA 3.0
+-->
+
+<property name="alternatedocroot_1" value="from=/uploads/* dir=/var/webapp" />
+
 </glassfish-web-app>

@@ -200,4 +200,23 @@ public class ConexionBDD {
             return false;
         }
     }
+    
+    
+    // Eliminar una imagen (solo si el autor coincide)
+    public static boolean eliminarImagen(int id, String autor) {
+        String sql = "DELETE FROM imagen WHERE ID = ? AND AUTOR = ?";
+
+        try (Connection connection = getConnection();
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setInt(1, id);
+            statement.setString(2, autor);
+
+            return statement.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }

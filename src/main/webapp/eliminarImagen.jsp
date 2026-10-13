@@ -1,10 +1,12 @@
 <%-- 
     Document   : eliminarImagen
-    Created on : 30 sept 2026, 15:20:07
     Author     : alumne
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="servlet.bdd.ConexionBDD"%>
+<%@page import="servlet.bdd.ConexionBDD.Imagen"%>
+
 <%-- Segmento de manejo de sesion --%>
 <%
     HttpSession sesion = request.getSession(false);
@@ -14,21 +16,21 @@
         return;
     }
 
-    String usuario = (String) sesion.getAttribute("usuario")
-    
-    // Comprobar q haya id de imagen 
-    String idParam = request.getParameter("id");
-    if (idParam == null || idParam.trim().isEmpty()) {
-        response.sendRedirect("buscarImagen.jsp");
-        return;
+    String usuario = (String) sesion.getAttribute("usuario");
+
+    // Recuperar la imagen; si no existe o no es del usuario, error
+    Imagen img = null;
+    try {
+        int id = Integer.parseInt(request.getParameter("id"));
+        img = ConexionBDD.obtenerImagenPorId(id);
+    } catch (Exception e) {
+        img = null;
     }
 
-    // Si la imagen no es del usuario te devuelve a busqueda
-    int id = Integer.parseInt(idParam);
-    Imagen img = ConexionBDD.obtenerImagenPorId(id);
     if (img == null || !img.getAutor().equalsIgnoreCase(usuario)) {
         response.sendRedirect("error.jsp");
         return;
+    }
 %>
 <!DOCTYPE html>
 <html>
@@ -37,19 +39,17 @@
         <link rel="stylesheet" type="text/css" href="css/styles.css">
         <title>Eliminar Imagen</title>
     </head>
-    
     <header>
         <div>
             <a href="logout" style="font-weight: bold;">Cerrar Sesión</a>
         </div>
     </header>
-   
     <body>
-        <h2>Seguro que quieres eliminar esta imàgen?</h2>
+        <h2>¿Seguro que quieres eliminar esta imagen?</h2>
         <table border="1" cellpadding="5">
             <tr>
                 <th>Vista previa</th>
-                <td><img src="imagenes/<%= img.getFichero() %>" width="150"/></td>
+                <td><img src="Upload/<%= img.getFichero() %>" width="150"/></td>
             </tr>
             <tr>
                 <th>Título</th>
@@ -61,8 +61,8 @@
             </tr>
         </table>
         <form action="eliminarImagen" method="POST">
-            <input type="hidden" name="id" value="<%= img.getId() %>"> <%-- para no pasar el id por la url--%>    
-            <input type="submit" value="Sí, eliminar Imagen">
+            <input type="hidden" name="id" value="<%= img.getId() %>">
+            <input type="submit" value="Sí, eliminar imagen">
             <a href="buscarImagen.jsp">Volver</a>
         </form>
     </body>
