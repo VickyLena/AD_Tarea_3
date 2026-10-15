@@ -151,3 +151,12 @@ table img {
     border-radius: 4px;
     object-fit: cover;
 }
+
+form.accion {
+    display: inline;
+    padding: 0;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+    background: none;
+}

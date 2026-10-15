@@ -12,4 +12,8 @@ public class Rutas {
     public static final String DIRECTORIO_IMAGENES = "/home/alumne/uploads";
 
     private Rutas() { }
+    public static String nombreUnico(String original) {
+        String limpio = original.replaceAll("[^a-zA-Z0-9._-]", "_");
+        return System.currentTimeMillis() + "_" + limpio;
+    }
 }

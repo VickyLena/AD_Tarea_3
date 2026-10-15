@@ -5,6 +5,7 @@
 package servlet;
 
 import servlet.bdd.ConexionBDD;
+import servlet.util.Rutas;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,8 @@ public class registrarImagen extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        request.setCharacterEncoding("UTF-8");
+        
         // Control de sesión
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
@@ -66,7 +68,7 @@ public class registrarImagen extends HttpServlet {
         }
 
         // directorio de destino como configuramis en glassfish-web.xml
-        String uploadFilePath = "/home/alumne/uploads";
+        String uploadFilePath = Rutas.DIRECTORIO_IMAGENES;
         File uploadDir = new File(uploadFilePath);
 
         if (!uploadDir.exists()) {
@@ -74,7 +76,8 @@ public class registrarImagen extends HttpServlet {
         }
 
         // Guardar el fichero sin read ni output stream, en vez uso .copy
-        File fileToSave = new File(uploadDir, fileName);
+        String nombreGuardado = Rutas.nombreUnico(fileName);
+        File fileToSave = new File(uploadDir, nombreGuardado);
         try (InputStream inputStream = filePart.getInputStream()) {
             Files.copy(inputStream, fileToSave.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (Exception e) {
@@ -85,17 +88,14 @@ public class registrarImagen extends HttpServlet {
 
         // Guardar en la BDD
         boolean insertOK = ConexionBDD.registrarImagen(
-                titulo, descripcion, keywords, creador, fechaCreacion, fechaAlta, fileName
+                titulo, descripcion, keywords, creador, fechaCreacion, fechaAlta, nombreGuardado
         );
 
         if (insertOK) {
-            response.setContentType("text/html;charset=UTF-8");
-            response.getWriter().println("<html><body>");
-            response.getWriter().println("<h3>Imagen registrada correctamente.</h3>");
-            response.getWriter().println("<a href='menu.jsp'>Volver al menú</a> | ");
-            response.getWriter().println("<a href='registrarImagen.jsp'>Registrar otra imagen</a>");
-            response.getWriter().println("</body></html>");
+            request.setAttribute("mensaje", "Imagen registrada correctamente.");
+            request.getRequestDispatcher("mensaje.jsp").forward(request, response);
         } else {
+            fileToSave.delete();
             response.sendRedirect("error.jsp");
         }
     }

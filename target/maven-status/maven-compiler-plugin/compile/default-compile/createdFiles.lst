@@ -1,11 +1,12 @@
 servlet/bdd/ConexionBDD$Imagen.class
-servlet/buscarImagen.class
 test/practica2/ad/JakartaRestConfiguration.class
+servlet/eliminarImagen.class
+servlet/registrarImagen.class
+servlet/util/Rutas.class
+servlet/buscarImagen.class
 servlet/logout.class
 test/practica2/ad/resources/JakartaEE91Resource.class
 servlet/login.class
-servlet/eliminarImagen.class
-servlet/registrarImagen.class
+servlet/registrarUsuario.class
 servlet/bdd/ConexionBDD.class
-servlet/util/Rutas.class
 servlet/modificarImagen.class

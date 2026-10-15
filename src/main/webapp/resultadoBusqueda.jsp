@@ -5,7 +5,6 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<a href="eliminarImagen.jsp"></a>
 <%@page import="java.util.List"%>
 <%@page import="servlet.bdd.ConexionBDD.Imagen"%>
 <%-- Segmento de manejo de sesion --%>
@@ -66,13 +65,18 @@
                         <td><%= img.getFechaCreacion() %></td>
                         <td><%= img.getFechaAlta() %></td>
                         <td>
-                            <%-- Solo mostrar modificar/eliminar si la imagen es del usuario logueado --%>
-                            <% if (img.getAutor().equalsIgnoreCase(usuario)) { %>
-                                <a href="modificarImagen.jsp?id=<%= img.getId() %>">Modificar</a> | 
-                                <a href="eliminarImagen.jsp?id=<%= img.getId() %>">Eliminar</a>
-                            <% } else { %>
-                                -
-                            <% } %>
+                        <% if (img.getAutor().equalsIgnoreCase(usuario)) { %>
+                            <form class="accion" action="modificarImagen.jsp" method="POST">
+                                <input type="hidden" name="id" value="<%= img.getId() %>">
+                                <button type="submit">Modificar</button>
+                            </form>
+                            <form class="accion" action="eliminarImagen.jsp" method="POST">
+                                <input type="hidden" name="id" value="<%= img.getId() %>">
+                                <button type="submit">Eliminar</button>
+                            </form>
+                        <% } else { %>
+                            -
+                        <% } %>
                         </td>
                     </tr>
                 <% } %>

@@ -1,11 +1,6 @@
 <%-- 
-<<<<<<< HEAD
-    Document   : modificarImagen
-    Created on : 23 sept 2026, 16:38:35
-=======
     Document   : buscarImagen
     Created on : 28 sept 2026, 12:55:14
->>>>>>> 1008d782b568d3f2560d87b1849dfd3f559b6485
     Author     : alumne
 --%>
 
