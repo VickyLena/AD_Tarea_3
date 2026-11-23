@@ -1,0 +1,162 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package rest;
+
+/**
+ *
+ * @author alumne
+ */
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.InputStream;
+import jakarta.json.Json;
+import jakarta.json.JsonArray;
+import jakarta.json.JsonObject;
+import jakarta.json.JsonReader;
+import modelos.Imagen;
+
+public class ClienteREST {
+
+    private static final String BASE_URL = "http://localhost:8080/Practica3ADREST/resources";
+
+    public static boolean validarUsuario(
+            String usuario, String password) throws IOException {
+
+        URI uri = URI.create(BASE_URL + "/login");
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) uri.toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("POST");
+            conexion.setDoOutput(true);
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(5000);
+
+            conexion.setRequestProperty(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+            );
+
+            conexion.setRequestProperty(
+                    "Accept", "application/json"
+            );
+
+            String datos =
+                    "usuario=" + URLEncoder.encode(
+                            usuario, StandardCharsets.UTF_8)
+                    + "&password=" + URLEncoder.encode(
+                            password, StandardCharsets.UTF_8);
+
+            try (OutputStream os = conexion.getOutputStream()) {
+                os.write(datos.getBytes(StandardCharsets.UTF_8));
+            }
+
+            int codigo = conexion.getResponseCode();
+
+            if (codigo == 401) {
+                return false;
+            }
+
+            if (codigo != 200) {
+                throw new IOException(
+                        "Error del REST. Código HTTP: " + codigo);
+            }
+
+            String respuesta;
+            try (var entrada = conexion.getInputStream()) {
+                respuesta = new String(
+                        entrada.readAllBytes(),
+                        StandardCharsets.UTF_8);
+            }
+
+            return Pattern.compile(
+                    "\"success\"\\s*:\\s*true"
+            ).matcher(respuesta).find();
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
+    
+    public static List<Imagen> buscarImagenes(
+        String titulo, String autor,
+        String keywords, String fechaCreacion)
+        throws IOException {
+
+        String parametros =
+                "title=" + encode(titulo)
+                + "&creator=" + encode(autor)
+                + "&keywords=" + encode(keywords)
+                + "&date=" + encode(fechaCreacion);
+
+        String url = BASE_URL + "/search?" + parametros;
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(url)
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("GET");
+            conexion.setRequestProperty("Accept", "application/json");
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(5000);
+
+            int codigo = conexion.getResponseCode();
+
+            if (codigo != 200) {
+                throw new IOException(
+                        "Error del REST. Código HTTP: " + codigo);
+            }
+
+            List<Imagen> resultados = new ArrayList<>();
+
+            try (InputStream entrada = conexion.getInputStream();
+                 JsonReader reader = Json.createReader(entrada)) {
+
+                JsonArray array = reader.readArray();
+
+                for (JsonObject obj : array.getValuesAs(JsonObject.class)) {
+
+                    Imagen imagen = new Imagen(
+                            obj.getInt("id"),
+                            obj.getString("titulo", ""),
+                            obj.getString("descripcion", ""),
+                            obj.getString("keywords", ""),
+                            obj.getString("autor", ""),
+                            obj.getString("fechaCreacion", ""),
+                            obj.getString("fechaAlta", ""),
+                            obj.getString("fichero", "")
+                    );
+
+                    resultados.add(imagen);
+                }
+            }
+
+            return resultados;
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
+
+    private static String encode(String valor) {
+        if (valor == null) {
+            valor = "";
+        }
+
+        return URLEncoder.encode(
+                valor, StandardCharsets.UTF_8);
+    }
+    
+}

@@ -4,8 +4,8 @@
  */
 package servlet;
 
-import servlet.bdd.ConexionBDD;
-import servlet.bdd.ConexionBDD.Imagen;
+import rest.ClienteREST;
+import modelos.Imagen;
 import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;
 import java.util.List;
@@ -36,7 +36,6 @@ public class buscarImagen extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // Control de sesión
         HttpSession session = request.getSession(false);
         if (session == null || session.getAttribute("usuario") == null) {
             response.sendRedirect("login.jsp");
@@ -48,13 +47,28 @@ public class buscarImagen extends HttpServlet {
         String keywords = request.getParameter("keywords");
         String fechaCreacion = request.getParameter("fechaCreacion");
 
-        
-        List<Imagen> resultados = ConexionBDD.buscarImagenes(titulo, autor, keywords,fechaCreacion);
+        try {
 
-        // Redirigir la respuesta a otro JSP 
-        request.setAttribute("listaImagenes", resultados);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("resultadoBusqueda.jsp");
-        dispatcher.forward(request, response);
-        
+            List<Imagen> resultados =
+                    ClienteREST.buscarImagenes(
+                            titulo, autor, keywords, fechaCreacion);
+
+            request.setAttribute("listaImagenes", resultados);
+
+            RequestDispatcher dispatcher =
+                    request.getRequestDispatcher(
+                            "resultadoBusqueda.jsp");
+
+            dispatcher.forward(request, response);
+
+        } catch (IOException e) {
+
+            log("Error buscando imágenes mediante REST", e);
+
+            response.sendError(
+                    HttpServletResponse.SC_BAD_GATEWAY,
+                    "No se pudieron obtener las imágenes del REST"
+            );
+        }
     }
 }

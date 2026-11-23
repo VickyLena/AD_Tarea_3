@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
-<%@page import="servlet.bdd.ConexionBDD.Imagen"%>
+<%@page import="modelos.Imagen"%>
 <%-- Segmento de manejo de sesion --%>
 <%
     HttpSession sesion = request.getSession(false);

@@ -4,8 +4,7 @@
  */
 package servlet;
 
-import servlet.bdd.ConexionBDD;
-import servlet.util.Rutas;
+import rest.ClienteREST;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
