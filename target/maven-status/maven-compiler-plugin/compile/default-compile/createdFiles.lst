@@ -3,6 +3,7 @@ test/practica2/ad/JakartaRestConfiguration.class
 servlet/logout.class
 test/practica2/ad/resources/JakartaEE91Resource.class
 servlet/login.class
+servlet/registrarUsuario.class
 servlet/eliminarImagen.class
 modelos/Imagen.class
 rest/ClienteREST.class

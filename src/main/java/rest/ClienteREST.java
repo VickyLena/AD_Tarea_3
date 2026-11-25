@@ -237,4 +237,39 @@ public class ClienteREST {
                 obj.getString("fichero", "")
         );
     }
+        /**
+     * Crea un usuario nuevo (POST /createUser con username y password).
+     * Devuelve el código HTTP de la respuesta (201 = creado).
+     */
+    public static int crearUsuario(String usuario, String password) throws IOException {
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(BASE_URL + "/createUser")
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("POST");
+            conexion.setDoOutput(true);
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(5000);
+
+            conexion.setRequestProperty(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+            );
+            conexion.setRequestProperty("Accept", "application/json");
+
+            String datos = "username=" + encode(usuario)
+                    + "&password=" + encode(password);
+
+            try (OutputStream os = conexion.getOutputStream()) {
+                os.write(datos.getBytes(StandardCharsets.UTF_8));
+            }
+
+            return conexion.getResponseCode();
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
 }
