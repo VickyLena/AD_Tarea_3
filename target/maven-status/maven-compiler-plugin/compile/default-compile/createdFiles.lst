@@ -7,3 +7,4 @@ servlet/registrarUsuario.class
 servlet/eliminarImagen.class
 modelos/Imagen.class
 rest/ClienteREST.class
+servlet/modificarImagen.class

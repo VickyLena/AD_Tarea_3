@@ -272,4 +272,42 @@ public class ClienteREST {
             conexion.disconnect();
         }
     }
+    
+    public static int modificarImagen(int id, String titulo, String descripcion,
+            String keywords, String autor, String fechaCreacion) throws IOException {
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(BASE_URL + "/modify")
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("POST");
+            conexion.setDoOutput(true);
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(5000);
+
+            conexion.setRequestProperty(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+            );
+            conexion.setRequestProperty("Accept", "application/json");
+
+            // Nombres de los parámetros: los del enunciado
+            String datos = "id=" + id
+                    + "&title=" + encode(titulo)
+                    + "&description=" + encode(descripcion)
+                    + "&keywords=" + encode(keywords)
+                    + "&creator=" + encode(autor)
+                    + "&capture=" + encode(fechaCreacion);
+
+            try (OutputStream os = conexion.getOutputStream()) {
+                os.write(datos.getBytes(StandardCharsets.UTF_8));
+            }
+
+            return conexion.getResponseCode();
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
 }

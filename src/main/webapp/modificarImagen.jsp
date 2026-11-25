@@ -1,12 +1,11 @@
 <%-- 
-    Document   : modifiacarImagen
-    Created on : 30 sept 2026, 15:23:52
+    Document   : modificarImagen
     Author     : alumne
 --%>
+
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="jakarta.servlet.http.HttpSession"%>
-<%@page import="servlet.bdd.ConexionBDD"%>
-<%@page import="servlet.bdd.ConexionBDD.Imagen"%>
+<%@page import="modelos.Imagen"%>
+<%@page import="rest.ClienteREST"%>
 
 <%-- Segmento de manejo de sesion --%>
 <%
@@ -18,25 +17,21 @@
     }
 
     String usuario = (String) sesion.getAttribute("usuario");
-%>
 
-<%-- Recuperar la imagen a modificar --%>
-<%
+    // Recuperar la imagen desde el servicio REST; si no existe o no es del usuario, error
     Imagen img = null;
     try {
         int id = Integer.parseInt(request.getParameter("id"));
-        img = ConexionBDD.obtenerImagenPorId(id);
+        img = ClienteREST.obtenerImagenPorId(id);
     } catch (Exception e) {
         img = null;
     }
 
-    // Si no existe la imagen, o no pertenece al usuario logueado, error
     if (img == null || !img.getAutor().equalsIgnoreCase(usuario)) {
         response.sendRedirect("error.jsp");
         return;
     }
 %>
-
 <!DOCTYPE html>
 <html>
     <head>
@@ -54,7 +49,7 @@
 
         <img src="uploads/<%= img.getFichero() %>" width="150"/><br><br>
 
-        <form method="POST" action="modificarImagen" enctype="multipart/form-data">
+        <form method="POST" action="modificarImagen">
             <input type="hidden" name="id" value="<%= img.getId() %>">
 
             <div>
@@ -78,12 +73,6 @@
             <div>
                 <label for="fechaCreacion">Fecha de Creación:</label><br>
                 <input type="date" id="fechaCreacion" name="fechaCreacion" value="<%= img.getFechaCreacion() %>" required>
-            </div>
-            <br>
-
-            <div>
-                <label for="fichero">Reemplazar imagen (opcional):</label><br>
-                <input type="file" id="fichero" name="fichero" accept="image/*">
             </div>
             <br>
 
