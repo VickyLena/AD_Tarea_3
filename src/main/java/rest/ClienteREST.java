@@ -159,4 +159,82 @@ public class ClienteREST {
                 valor, StandardCharsets.UTF_8);
     }
     
+    public static Imagen obtenerImagenPorId(int id) throws IOException {
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(BASE_URL + "/searchID/" + id)
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("GET");
+            conexion.setRequestProperty("Accept", "application/json");
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(5000);
+
+            int codigo = conexion.getResponseCode();
+
+            if (codigo == 404) {
+                return null;
+            }
+
+            if (codigo != 200) {
+                throw new IOException(
+                        "Error del REST. Código HTTP: " + codigo);
+            }
+
+            try (InputStream entrada = conexion.getInputStream();
+                 JsonReader reader = Json.createReader(entrada)) {
+
+                return jsonToImagen(reader.readObject());
+            }
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
+
+    public static int eliminarImagen(int id, String creator) throws IOException {
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(BASE_URL + "/delete")
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("POST");
+            conexion.setDoOutput(true);
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(5000);
+
+            conexion.setRequestProperty(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8"
+            );
+            conexion.setRequestProperty("Accept", "application/json");
+
+            String datos = "id=" + id
+                    + "&creator=" + encode(creator);
+
+            try (OutputStream os = conexion.getOutputStream()) {
+                os.write(datos.getBytes(StandardCharsets.UTF_8));
+            }
+
+            return conexion.getResponseCode();
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
+
+    private static Imagen jsonToImagen(JsonObject obj) {
+        return new Imagen(
+                obj.getInt("id"),
+                obj.getString("titulo", ""),
+                obj.getString("descripcion", ""),
+                obj.getString("keywords", ""),
+                obj.getString("autor", ""),
+                obj.getString("fechaCreacion", ""),
+                obj.getString("fechaAlta", ""),
+                obj.getString("fichero", "")
+        );
+    }
 }

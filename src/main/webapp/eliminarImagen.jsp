@@ -4,8 +4,8 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@page import="servlet.bdd.ConexionBDD"%>
-<%@page import="servlet.bdd.ConexionBDD.Imagen"%>
+<%@page import="modelos.Imagen"%>
+<%@page import="rest.ClienteREST"%>
 
 <%-- Segmento de manejo de sesion --%>
 <%
@@ -18,11 +18,11 @@
 
     String usuario = (String) sesion.getAttribute("usuario");
 
-    // Recuperar la imagen; si no existe o no es del usuario, error
+    // Recuperar la imagen desde el servicio REST; si no existe o no es del usuario, error
     Imagen img = null;
     try {
         int id = Integer.parseInt(request.getParameter("id"));
-        img = ConexionBDD.obtenerImagenPorId(id);
+        img = ClienteREST.obtenerImagenPorId(id);
     } catch (Exception e) {
         img = null;
     }

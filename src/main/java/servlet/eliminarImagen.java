@@ -1,11 +1,7 @@
 package servlet;
 
-import servlet.bdd.ConexionBDD;
-import servlet.bdd.ConexionBDD.Imagen;
-import servlet.util.Rutas;
-import java.io.File;
+import rest.ClienteREST;
 import java.io.IOException;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -38,33 +34,32 @@ public class eliminarImagen extends HttpServlet {
         try {
             id = Integer.parseInt(request.getParameter("id"));
         } catch (Exception e) {
-            response.sendRedirect("error.jsp");
+            mostrarError(request, response, "El id de la imagen no es válido.");
             return;
         }
 
-        // verificar que existe y que es del usuario logueado
-        Imagen img = ConexionBDD.obtenerImagenPorId(id);
-        if (img == null || !img.getAutor().equalsIgnoreCase(usuarioLogueado)) {
-            response.sendRedirect("error.jsp");
-            return;
-        }
+        try {
+            // Llamada al servicio REST
+            int codigo = ClienteREST.eliminarImagen(id, usuarioLogueado);
 
-        // Eliminar primero en la BDD
-        boolean deleteOK = ConexionBDD.eliminarImagen(id, usuarioLogueado);
-
-        if (deleteOK) {
-            // Solo si la BDD ha ido bien, eliminar el fichero del directorio externo
-            String uploadFilePath = "/home/alumne/uploads";
-            String filePath = uploadFilePath + File.separator + img.getFichero();
-            File fileToDelete = new File(filePath);
-
-            if (fileToDelete.exists()) {
-                fileToDelete.delete();
+            switch (codigo) {
+                case 200:
+                    request.getRequestDispatcher("eliminarOk.jsp").forward(request, response);
+                    break;
+                case 403:
+                    mostrarError(request, response, "No puedes eliminar una imagen que no es tuya.");
+                    break;
+                case 404:
+                    mostrarError(request, response, "La imagen no existe.");
+                    break;
+                default:
+                    mostrarError(request, response,
+                            "El servicio REST ha devuelto un error (código " + codigo + ").");
             }
-            RequestDispatcher dispatcher = request.getRequestDispatcher("eliminarOk.jsp");
-            dispatcher.forward(request, response);
-        } else {
-            response.sendRedirect("error.jsp");
+
+        } catch (IOException e) {
+            log("Error eliminando imagen mediante REST", e);
+            mostrarError(request, response, "No se ha podido conectar con el servicio REST.");
         }
     }
 
@@ -73,5 +68,12 @@ public class eliminarImagen extends HttpServlet {
             throws ServletException, IOException {
         // Para proteger de GETs por la url directo
         response.sendRedirect("buscarImagen.jsp");
+    }
+
+    // error.jsp muestra el atributo "errorMessage"
+    private void mostrarError(HttpServletRequest request, HttpServletResponse response, String mensaje)
+            throws ServletException, IOException {
+        request.setAttribute("errorMessage", mensaje);
+        request.getRequestDispatcher("error.jsp").forward(request, response);
     }
 }
