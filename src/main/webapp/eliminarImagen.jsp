@@ -49,7 +49,7 @@
         <table border="1" cellpadding="5">
             <tr>
                 <th>Vista previa</th>
-                <td><img src="uploads/<%= img.getFichero() %>" width="150"/></td>
+                <td><img src="imagen?id=<%= img.getId() %>" width="150" alt="Sin imagen"/></td>
             </tr>
             <tr>
                 <th>Título</th>

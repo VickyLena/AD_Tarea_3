@@ -24,6 +24,7 @@ import jakarta.json.JsonArray;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import modelos.Imagen;
+import modelos.FicheroImagen;
 
 public class ClienteREST {
 
@@ -219,6 +220,53 @@ public class ClienteREST {
             }
 
             return conexion.getResponseCode();
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
+
+    public static FicheroImagen descargarImagen(int id) throws IOException {
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(BASE_URL + "/download/" + id)
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("GET");
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(10000);
+
+            int codigo = conexion.getResponseCode();
+
+            if (codigo == 404) {
+                return null;
+            }
+
+            if (codigo != 200) {
+                throw new IOException(
+                        "Error del REST. Código HTTP: " + codigo);
+            }
+
+            byte[] datos;
+            try (InputStream entrada = conexion.getInputStream()) {
+                datos = entrada.readAllBytes();
+            }
+
+            String tipo = conexion.getContentType();
+            if (tipo == null) {
+                tipo = "application/octet-stream";
+            }
+
+            // Nombre del fichero: viene en la cabecera Content-Disposition
+            String nombre = "imagen_" + id;
+            String disposicion = conexion.getHeaderField("Content-Disposition");
+            if (disposicion != null && disposicion.contains("filename=")) {
+                nombre = disposicion.substring(disposicion.indexOf("filename=") + 9)
+                                    .replace("\"", "").trim();
+            }
+
+            return new FicheroImagen(datos, tipo, nombre);
 
         } finally {
             conexion.disconnect();

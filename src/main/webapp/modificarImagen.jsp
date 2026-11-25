@@ -47,7 +47,7 @@
     <body>
         <h2>Modificar Imagen</h2>
 
-        <img src="uploads/<%= img.getFichero() %>" width="150"/><br><br>
+        <img src="imagen?id=<%= img.getId() %>" width="150" alt="Sin imagen"/><br><br>
 
         <form method="POST" action="modificarImagen">
             <input type="hidden" name="id" value="<%= img.getId() %>">

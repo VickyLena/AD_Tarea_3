@@ -29,7 +29,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="css/styles.css">
-        <title>Resultado de la Bùsqueda</title>
+        <title>Resultado de la Búsqueda</title>
     </head>
     <body>
         <h1>Resultados de la Búsqueda</h1>
@@ -57,7 +57,11 @@
 
                 <% for (Imagen img : resultados) { %>
                     <tr>
-                        <td><img src="uploads/<%= img.getFichero() %>" width="100"/></td>
+                        <td>
+                            <%-- La imagen se pide al servicio REST a través del servlet "imagen" --%>
+                            <img src="imagen?id=<%= img.getId() %>" width="100" alt="Sin imagen"/><br>
+                            <a href="imagen?id=<%= img.getId() %>&descargar=1">Descargar</a>
+                        </td>
                         <td><%= img.getTitulo() %></td>
                         <td><%= img.getDescripcion() %></td>
                         <td><%= img.getKeywords() %></td>
