@@ -358,4 +358,107 @@ public class ClienteREST {
             conexion.disconnect();
         }
     }
+
+    public static String subirImagen(Part fichero) throws IOException {
+
+        String url = BASE_URL + "/upload";
+
+        HttpURLConnection conexion = (HttpURLConnection) URI.create(url).toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("POST");
+            conexion.setDoOutput(true);
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(15000);
+
+            conexion.setRequestProperty(
+                    "Content-Type", "application/octet-stream");
+
+            conexion.setRequestProperty(
+                    "Accept", "application/json");
+
+            String nombre = fichero.getSubmittedFileName();
+
+            conexion.setRequestProperty(
+                    "X-Filename",
+                    URLEncoder.encode(nombre, StandardCharsets.UTF_8)
+            );
+
+            try (InputStream entrada = fichero.getInputStream();
+                 OutputStream salida = conexion.getOutputStream()) {
+
+                entrada.transferTo(salida);
+            }
+
+            int codigo = conexion.getResponseCode();
+
+            if (codigo != 201) {
+                throw new IOException(
+                        "Error subiendo fichero. HTTP: " + codigo);
+            }
+
+            try (InputStream entrada = conexion.getInputStream();
+                 JsonReader reader = Json.createReader(entrada)) {
+
+                JsonObject json = reader.readObject();
+
+                return json.getString("fichero");
+            }
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
+        
+
+    public static boolean registrarImagen(String titulo,String descripcion,String keywords,String creador,String fechaCreacion,String nombreFichero) 
+            throws IOException {
+
+        String url = BASE_URL + "/register";
+
+        HttpURLConnection conexion =
+                (HttpURLConnection) URI.create(url)
+                        .toURL().openConnection();
+
+        try {
+            conexion.setRequestMethod("POST");
+            conexion.setDoOutput(true);
+            conexion.setConnectTimeout(5000);
+            conexion.setReadTimeout(15000);
+
+            conexion.setRequestProperty(
+                    "Content-Type",
+                    "application/x-www-form-urlencoded; charset=UTF-8");
+
+            conexion.setRequestProperty(
+                    "Accept", "application/json");
+            
+            conexion.setRequestProperty("X-Filename", nombreFichero);
+
+            String parametros =
+                    "title=" + encode(titulo)
+                    + "&description=" + encode(descripcion)
+                    + "&keywords=" + encode(keywords)
+                    + "&creator=" + encode(creador)
+                    + "&capture=" + encode(fechaCreacion);
+
+            try (OutputStream salida = conexion.getOutputStream()) {
+                salida.write(
+                        parametros.getBytes(StandardCharsets.UTF_8)
+                );
+            }
+
+            int codigo = conexion.getResponseCode();
+
+            if (codigo == 201) {
+                return true;
+            }
+
+            throw new IOException(
+                    "Error registrando imagen. HTTP: " + codigo);
+
+        } finally {
+            conexion.disconnect();
+        }
+    }
 }
