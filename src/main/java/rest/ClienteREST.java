@@ -25,6 +25,7 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonReader;
 import modelos.Imagen;
 import modelos.FicheroImagen;
+import jakarta.servlet.http.Part;
 
 public class ClienteREST {
 
@@ -285,10 +286,7 @@ public class ClienteREST {
                 obj.getString("fichero", "")
         );
     }
-        /**
-     * Crea un usuario nuevo (POST /createUser con username y password).
-     * Devuelve el código HTTP de la respuesta (201 = creado).
-     */
+     
     public static int crearUsuario(String usuario, String password) throws IOException {
 
         HttpURLConnection conexion =
