@@ -55,7 +55,7 @@ public class ClienteREST {
             );
 
             String datos =
-                    "usuario=" + URLEncoder.encode(
+                    "username=" + URLEncoder.encode(
                             usuario, StandardCharsets.UTF_8)
                     + "&password=" + URLEncoder.encode(
                             password, StandardCharsets.UTF_8);
